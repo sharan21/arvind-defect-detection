@@ -1,6 +1,8 @@
 import numpy as np
 from math import sqrt
 from scipy import interpolate
+from utils import interp2linear
+import cv2
 
 
 def undistort(idis, params_d, params_ud):
@@ -52,8 +54,15 @@ def undistort(idis, params_d, params_ud):
     # %4. Final step interpolation and mapping
     img_und = np.zeros((params_ud['H'], params_ud['W'], 3))
 
-    for c in range(3):
-        image_und[:,:,c] = interpolate.interp2d(idis[:,:,c], x_d, y_d, kind="cubic")
+    image_und = interp2linear(idis, x_d, y_d)
+    cv2.imshow("try", image_und)
+    cv2.waitKey(0)
+
+    
+
+    # for c in range(3):
+        
+        # image_und[:,:,c] = interpolate.interp2d(idis[:,:,c], x_d, y_d, kind="cubic")
 
     
     # for c in range(1,3,1):
