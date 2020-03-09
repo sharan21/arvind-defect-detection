@@ -1,5 +1,4 @@
 from undistort_sph_im import undistort
-
 import os
 import pandas as pd
 import cv2
@@ -23,7 +22,7 @@ for i in range(len(paths)):
     xi = distortion[i]
     dist = dist + xi
     (imh, imw, _) = idis.shape
-    f_dist = focal[i] + (imw/imh)*(imh/299)
+    f_dist = focal[i] * (imw/imh)*(imh/299)
     f = f + f_dist
     u0_dist = imw/2
     v0_dist = imh/2

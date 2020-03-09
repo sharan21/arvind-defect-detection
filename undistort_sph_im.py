@@ -4,6 +4,9 @@ from scipy import interpolate
 from utils import interp2linear
 import cv2
 
+def diskradius(xi, f):
+
+    return np.sqrt(-(f*f)/(1-xi*xi))
 
 def undistort(idis, params_d, params_ud):
 
@@ -20,6 +23,7 @@ def undistort(idis, params_d, params_ud):
     f_undist = params_ud['f']
     u0_undist = params_ud['W']/2  
     v0_undist = params_ud['H']/2
+    
     xi = params_d['xi']
 
     # (Imd.H, Imd.W, ~] = size(Idis);
@@ -52,30 +56,29 @@ def undistort(idis, params_d, params_ud):
     y_d = ((y_sph*f_dist)/den) + v0_dist
  
     # %4. Final step interpolation and mapping
-    img_und = np.zeros((params_ud['H'], params_ud['W'], 3))
+    im_und = np.zeros((params_ud['H'], params_ud['W'], 3))
+    
+    # for c in range(3):
+    #     im_und[:,:,c] = interp2linear(idis[:,:,c], x_d, y_d)
 
-    image_und = interp2linear(idis, x_d, y_d)
-    cv2.imshow("try", image_und)
+    im_und = interp2linear(idis, x_d, y_d)
+
+
+    # im_trans = np.transpose(im, (1,0,2))
+
+    # r = diskradius(xi, f_dist)
+
+    # DIM = im.shape
+    # ci = (np.round(DIM[0]/2), np.round(DIM[1]/2))
+    # xx, yy = np.meshgrid(range(DIM[0])-ci[0], range(DIM[1])-ci[1])
+    # mask = np.double((np.multiply(xx,xx)+np.multiply(yy,yy))<r*r)
+    # mask_3channel = np.stack([mask,mask,mask],axis=-1)
+    # print(mask_3channel.shape)
+    # print(im_trans.shape)
+    # im_und = np.array(np.multiply(im_trans, mask_3channel),dtype=np.uint8)
+
+    cv2.imshow("try", im_und)
     cv2.waitKey(0)
 
-    
 
-    # for c in range(3):
-        
-        # image_und[:,:,c] = interpolate.interp2d(idis[:,:,c], x_d, y_d, kind="cubic")
-
-    
-    # for c in range(1,3,1):
-        
-    # for c=1:3
-    # Image_und(:,:,c) = interp2(im2double(Idis(:,:,c)), X_d, Y_d, 'cubic');
-    # [Im_und.H, Im_und.W, ~] = size(Image_und);
-    
-    # # %ROI
-    # min(X_d(:)), max(X_d(:));
-    # min(Y_d(:)), max(Y_d(:));
-    # size(Idis);
-
-# if __name__ = "__main__":
-#     params_d = {'W':10, 'H':1
                 
